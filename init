@@ -6,13 +6,11 @@ version_ge() {
 }
 
 # 1. Dependency Checks
-# Check ffmpeg 7.1.1
 if ! command -v ffmpeg &> /dev/null || ! version_ge "$(ffmpeg -version | grep -oP 'version \K[0-9.]+')" "7.1.1"; then
     echo "Installing/Updating ffmpeg..."
     sudo apt update && sudo apt install -y ffmpeg
 fi
 
-# Check bats 1.11.1
 if ! command -v bats &> /dev/null || ! version_ge "$(bats -v | awk '{print $2}')" "1.11.1"; then
     echo "Installing/Updating bats..."
     sudo apt update && sudo apt install -y bats
@@ -22,18 +20,17 @@ fi
 [ -f ~/.bashrc ] || touch ~/.bashrc
 [ -f ~/.bash_functions ] || touch ~/.bash_functions
 
-# 3. Sourcing Check
-SOURCE_STR='[ -f ~/.bash_functions ] && . ~/.bash_functions'
-if ! grep -Fxq "$SOURCE_STR" ~/.bashrc; then
-    echo "Adding bash_functions source to .bashrc"
-    echo "$SOURCE_STR" >> ~/.bashrc
+# 3. .bashrc Sourcing Check (Loads .bash_functions)
+SOURCE_BASH_FUNC='[ -f ~/.bash_functions ] && . ~/.bash_functions'
+if ! grep -Fxq "$SOURCE_BASH_FUNC" ~/.bashrc; then
+    echo "Adding .bash_functions source to .bashrc"
+    echo "$SOURCE_BASH_FUNC" >> ~/.bashrc
 fi
 
 # 4. Symlink Creation
 REPO_PATH=$(pwd)
 LINK_PATH="/usr/local/ffmpeg_functions"
 
-# Remove existing link/file if it exists to overwrite
 if [ -L "$LINK_PATH" ] || [ -f "$LINK_PATH" ]; then
     sudo rm "$LINK_PATH"
 fi
@@ -41,5 +38,12 @@ fi
 sudo ln -s "$REPO_PATH" "$LINK_PATH"
 echo "Symlink created at: $LINK_PATH -> $REPO_PATH"
 
-# Final reload instruction
+# 5. .bash_functions Sourcing Check (Loads the repo methods)
+# This points to the .main_functions file via the symlink
+REPO_SOURCE_STR="[ -f $LINK_PATH/.main_functions ] && . $LINK_PATH/.main_functions"
+if ! grep -Fq "$LINK_PATH/.main_functions" ~/.bash_functions; then
+    echo "Linking $LINK_PATH/.main_functions to ~/.bash_functions"
+    echo "$REPO_SOURCE_STR" >> ~/.bash_functions
+fi
+
 echo "Run 'source ~/.bashrc' to apply changes."

@@ -1,2 +1,3 @@
 # add vtrim - video trimmer function
 . ./functions/.vtrim
+. ./functions/.rokuconvert

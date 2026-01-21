@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# 1. & 3. Ensure ~/.bash_functions exists
+BASH_FUNC_FILE="$HOME/.bash_functions"
+[ -f "$BASH_FUNC_FILE" ] || touch "$BASH_FUNC_FILE"
+
+# 2. Define the symlink reference and the sourcing line
+LINK_PATH="/usr/local/ffmpeg_functions"
+MAIN_FUNC_FILE="$LINK_PATH/.main_functions"
+REPO_SOURCE_STR="[ -f $MAIN_FUNC_FILE ] && . $MAIN_FUNC_FILE"
+
+# Ensure ~/.bash_functions references the symlink's .main_functions
+if ! grep -Fq "$MAIN_FUNC_FILE" "$BASH_FUNC_FILE"; then
+    echo "Updating $BASH_FUNC_FILE to reference $MAIN_FUNC_FILE"
+    echo "$REPO_SOURCE_STR" >> "$BASH_FUNC_FILE"
+fi
+
+# 4. Update .main_functions based on the functions directory
+# This script is expected to run from the repo root
+if [ -d "./functions" ]; then
+    # Ensure .main_functions exists in the repo root
+    [ -f "./.main_functions" ] || touch "./.main_functions"
+
+    echo "Scanning functions directory..."
+    for file in functions/.*; do
+        # Skip '.' and '..' directories
+        [[ "$file" == "functions/." || "$file" == "functions/.." ]] && continue
+        
+        # Only process files
+        [ -f "$file" ] || continue
+
+        # Format the line for sourcing
+        SOURCE_LINE=". $LINK_PATH/$file"
+
+        # Append if the file path is not already mentioned in .main_functions
+        if ! grep -Fq "$file" "./.main_functions"; then
+            echo "Registering new function file: $file"
+            echo "$SOURCE_LINE" >> "./.main_functions"
+        fi
+    done
+else
+    echo "Error: ./functions directory not found. Run this from the repo root."
+    exit 1
+fi
+
+source ~/.bashrc
+
+echo "Refresh complete."

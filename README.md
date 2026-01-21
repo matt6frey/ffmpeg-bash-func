@@ -38,6 +38,8 @@ Currently, this project is only set up for Debian v13/Ubuntu v2025. I want to ma
 1. Add name conflict check for each method creation, so we don't overwrite existing system methods.
 2. Add some Github Actions to check for popular packages that already exist to also help with step 1. 
 3. Add Github Actions for testing, PR evaluation, security & vulnerability checks.
+4. Update init script to have a flag for system wide scope (all users) or only user local scope
+5. Update methods and repo with best practices from wiki.
 
 ## Contributing
 
@@ -46,6 +48,7 @@ TL/DR;
 2. Follow the section on *adding new methods*.
 3. Don't provide duplicate methods. 
 4. Feel free to add your Github Handle/URL in a comment within the file
+5. Create your PR! 🚀
 
 Follow the section on *adding new methods*. For the most part, this is a fun project for me as I explore `ffmpeg` more, however, I definitely encourage people to contribute their functions to this project. If you're a new developer wanting to learn Bash/Shell scripting for Linux/Unix (and potentially Windows - we'll see), feel free to make a PR. I am happy to review your code when I get the chance and give you feedback & help you gain contributions. 
 

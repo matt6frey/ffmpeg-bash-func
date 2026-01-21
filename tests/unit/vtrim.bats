@@ -1,20 +1,22 @@
 #!/usr/bin/env bats
 
 setup() {
-    # Source the function file
-    # Adjust path if your file is in ./functions/.vtrim
-    source "./functions/.vtrim"
+    # 1. Get the absolute path to the project root
+    # $BASH_SOURCE is the path to this .bats file
+    REPODIR="$(cd "$(dirname "$BASH_SOURCE")/../.." && pwd)"
     
-    # Create a dummy input file for testing
+    source "$REPODIR/functions/.vtrim"
+    
+    TEST_TEMP_DIR="$(mktemp -d)"
+    cd "$TEST_TEMP_DIR"
     touch "test_video.mp4"
 }
 
 teardown() {
-    # Clean up any leftover files
-    rm -f "test_video.mp4" "test_video.trimmed.mp4"
+    rm -rf "$TEST_TEMP_DIR"
 }
 
-# Mock ffmpeg to simulate success without needing the binary
+# Mock ffmpeg
 ffmpeg() {
     return 0
 }
@@ -32,9 +34,8 @@ ffmpeg() {
 }
 
 @test "vtrim attempts to process file and calls ffmpeg" {
-    # We redefine ffmpeg inside the test to verify it was called
     ffmpeg() { 
-        echo "ffmpeg called"
+        touch "test_video.trimmed.mp4"
         return 0 
     }
     run vtrim "test_video.mp4" "00:01:00" "00:02:00"
@@ -43,11 +44,9 @@ ffmpeg() {
 }
 
 @test "vtrim handles ffmpeg failure" {
-    # Mock ffmpeg to fail
     ffmpeg() { return 1; }
-    
     run vtrim "test_video.mp4" "00:01:00" "00:02:00"
     [ "$status" -eq 1 ]
     [[ "${lines[1]}" == "Error: ffmpeg failed."* ]]
-    [ -f "test_video.mp4" ] # Original should still exist
+    [ -f "test_video.mp4" ] 
 }

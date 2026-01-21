@@ -1,14 +1,20 @@
 #!/usr/bin/env bats
 
 setup() {
-    # 1. Get the absolute path to the project root
-    # $BASH_SOURCE is the path to this .bats file
-    REPODIR="$(cd "$(dirname "$BASH_SOURCE")/../.." && pwd)"
+    # Use BATS_TEST_FILENAME to find the script location
+    # tests/unit/vtrim.bats -> go up 2 levels to reach root
+    REPODIR="$(cd "$(dirname "$BATS_TEST_FILENAME")/../.." && pwd)"
     
+    # Check if file exists before sourcing to prevent silent failures
+    if [ ! -f "$REPODIR/functions/.vtrim" ]; then
+        echo "Error: Cannot find $REPODIR/functions/.vtrim" >&2
+        return 1
+    fi
+
     source "$REPODIR/functions/.vtrim"
     
     TEST_TEMP_DIR="$(mktemp -d)"
-    cd "$TEST_TEMP_DIR"
+    cd "$TEST_TEMP_DIR" || exit 1
     touch "test_video.mp4"
 }
 

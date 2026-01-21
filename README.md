@@ -12,6 +12,17 @@ The init executable will check for your dependencies and add them for you. It wi
 1. Run the `init` executable
 2. test for `vtrim` using `type vtrim` (or desired method)
 
+The above should display the following:
+```bash
+YOUR_USER@YOUR_PC:~/Projects/ffmpeg-bash-func$ type vtrim
+vtrim is a function
+vtrim () 
+{ 
+    if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]] || [[ -z "$1" ]]; then
+        echo "Us.."
+        # remaining method code
+```
+
 ## Adding new methods
 
 1. Add new methods in the functions folder. 

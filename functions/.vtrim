@@ -1,0 +1,39 @@
+vtrim() {
+    # Flag option for help
+    if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]] || [[ -z "$1" ]]; then
+        echo "Usage: vtrim [file_path] [start_time] [end_time]"
+        echo ""
+        echo "Arguments:"
+        echo "  file_path    Full path to the mp4 file"
+        echo "  start_time   Start timestamp (HH:MM:SS or seconds)"
+        echo "  end_time     End timestamp (HH:MM:SS or seconds)"
+        echo ""
+        echo "Example: vtrim '/path/to/video.mp4' 00:00:10 00:04:00"
+        return 0
+    fi
+
+    local input_file="$1"
+    local start_time="$2"
+    local end_time="$3"
+    
+    # Generate the temporary filename
+    local extension="${input_file##*.}"
+    local filename="${input_file%.*}"
+    local trimmed_file="${filename}.trimmed.${extension}"
+
+    echo "Processing: $input_file"
+
+    # Run ffmpeg with stream copying (no re-encoding)
+    ffmpeg -ss "$start_time" -to "$end_time" -i "$input_file" -c copy "$trimmed_file"
+
+    # Check if ffmpeg succeeded before deleting the original
+    if [ $? -eq 0 ]; then
+        echo "Trim successful. Replacing original file..."
+        rm "$input_file"
+        mv "$trimmed_file" "$input_file"
+        echo "Done!"
+    else
+        echo "Error: ffmpeg failed. Original file preserved."
+        return 1
+    fi
+}

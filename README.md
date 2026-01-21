@@ -12,7 +12,7 @@ The init executable will check for your dependencies and add them for you. It wi
 1. Run the `init` executable
 2. test for `vtrim` using `type vtrim` (or desired method)
 
-The above should display the following:
+**Step 2 output:**
 ```bash
 YOUR_USER@YOUR_PC:~/Projects/ffmpeg-bash-func$ type vtrim
 vtrim is a function
@@ -42,9 +42,10 @@ Currently, this project is only set up for Debian v13/Ubuntu v2025. I want to ma
 ## Contributing
 
 TL/DR;
-1. Follow the section on *adding new methods*.
-2. Don't provide duplicate methods. 
-3. Feel free to add your Github Handle/URL in a comment within the file
+1. Create a branch off of `main`.
+2. Follow the section on *adding new methods*.
+3. Don't provide duplicate methods. 
+4. Feel free to add your Github Handle/URL in a comment within the file
 
 Follow the section on *adding new methods*. For the most part, this is a fun project for me as I explore `ffmpeg` more, however, I definitely encourage people to contribute their functions to this project. If you're a new developer wanting to learn Bash/Shell scripting for Linux/Unix (and potentially Windows - we'll see), feel free to make a PR. I am happy to review your code when I get the chance and give you feedback & help you gain contributions. 
 

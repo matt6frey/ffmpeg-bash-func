@@ -53,7 +53,7 @@ TL/DR;
 Follow the section on *adding new methods*. For the most part, this is a fun project for me as I explore `ffmpeg` more, however, I definitely encourage people to contribute their functions to this project. If you're a new developer wanting to learn Bash/Shell scripting for Linux/Unix (and potentially Windows - we'll see), feel free to make a PR. I am happy to review your code when I get the chance and give you feedback & help you gain contributions. 
 
 ## Resources
-
+- [Repo Wiki](https://github.com/matt6frey/ffmpeg-bash-func/wiki/Bash-Scripting-Best-Practices-and-Conventions) 
 - [ffmpeg Core docs](https://ffmpeg.org/documentation.html)
 - [ffmpeg-filters](https://ffmpeg.org/ffmpeg-filters.html)
 - [ffmpeg-protocols](https://ffmpeg.org/ffmpeg-protocols.html)
